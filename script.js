@@ -54,32 +54,29 @@ let activeNote = null;
 // Philippine Time Clock with accurate time
 function initPhilippineTime() {
     const timeDisplay = document.getElementById('philippine-time');
-
+    
     function updateTime() {
-        // Create a new date object
+        // Create a date object with the current UTC time
         const now = new Date();
-
-        // Convert to Philippine Standard Time (UTC+8) and manually add 1 hour if needed
-        const philippineTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
-        philippineTime.setHours(philippineTime.getHours() + 1); // Fix 1-hour delay
-
-        // Extract time values
-        let hours = philippineTime.getHours();
-        let minutes = philippineTime.getMinutes();
-        let seconds = philippineTime.getSeconds();
+        
+        // Philippine Standard Time is UTC+8
+        const philippineTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+        
+        // Format the time
+        const hours = philippineTime.getUTCHours();
+        const minutes = philippineTime.getUTCMinutes();
+        const seconds = philippineTime.getUTCSeconds();
         const ampm = hours >= 12 ? 'PM' : 'AM';
-
+        
         // Convert to 12-hour format
-        hours = hours % 12 || 12;
-
-        // Format time with leading zeros
-        const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${ampm} PHT`;
-
-        // Display the time
+        const formattedHours = hours % 12 || 12;
+        
+        // Format the time string
+        const timeString = `${formattedHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${ampm} PHT`;
+        
         timeDisplay.textContent = timeString;
     }
-
-    // Update the time immediately and every second
+    
     updateTime();
     setInterval(updateTime, 1000);
 }
